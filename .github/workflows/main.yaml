@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Testing Build pre-Deploy
+      - name: Testing Build Deploy
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
@@ -28,28 +28,29 @@ jobs:
     strategy:
       matrix:
         node-version: [16.x]
+
     steps:
-      - name: Build app on VM
+      - name: Testing Build Deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME}}
+          username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
             eval "$(ssh-agent -s)"
             ssh-add ~/.ssh/vm_senpro_modul2_65
-            echo "Cek folder project";
-            [ ! -d "${HOME}/senpro/479314/modul02/senpro-github-action/" ] &&
+            echo "Cek folder project"
+            [ ! -d "${home}/senpro/479314/modul02/senpro-github-action" ] &&
             {
-            echo "Repository belum di-clone. Cloning ... ";
-            mkdir -p ~/senpro/479314/modul02;
-            cd ~/senpro/479314/modul02;
-            git clone git@github.com:EgaTypeR/senpro-github-action.git;
+              echo "Repository belum di-clone. Cloning...";
+              mkdir -p ~/senpro/479314/modul02;
+              cd ~/senpro/479314/modul02;
+              git clone git@github.com:EgaTypeR/senpro-github-action.git;
             } ||
             {
-            echo "Repository sudah ada. Building ... ";
-            cd ~/senpro/479314/modul02/senpro-github-action;
-            git restore .;
-            git pull origin main;
+              echo "Repository sudah ada, Building...";
+              cd ~/senpro/479314/modul02/senpro-github-action;
+              git restore .;
+              git pull origin main;
             }
